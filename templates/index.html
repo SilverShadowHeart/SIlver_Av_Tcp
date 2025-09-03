@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silver AV - Predict Churn</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- === THIS HEADER SECTION IS NOW CORRECTED === -->
+    <header class="main-header">
+        <div class="logo">SILVER AV</div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="{{ url_for('home') }}" class="active">Predict</a></li>
+                <li><a href="{{ url_for('explore') }}">Explore</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+            </ul>
+        </nav>
+    </header>
+    <!-- === END OF CORRECTED SECTION === -->
+
+    <main class="main-content">
+        <form id="prediction-form" action="{{ url_for('predict') }}" method="post">
+            
+            <!-- Step 1: Personal Information -->
+            <div class="form-step active-step" id="step-1">
+                <h2 class="step-title">Personal Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select name="gender" id="gender" required><option value="Male">Male</option><option value="Female">Female</option></select>
+                    </div>
+                     <div class="form-group">
+                        <label for="SeniorCitizen">Senior Citizen</label>
+                        <select name="SeniorCitizen" id="SeniorCitizen" required>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Partner">Has Partner</label>
+                        <select name="Partner" id="Partner" required><option value="Yes">Yes</option><option value="No">No</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Dependents">Has Dependents</label>
+                        <select name="Dependents" id="Dependents" required><option value="Yes">Yes</option><option value="No">No</option></select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Account Information -->
+            <div class="form-step" id="step-2">
+                <h2 class="step-title">Account Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="tenure">Tenure (in months)</label>
+                        <input type="number" name="tenure" id="tenure" placeholder="e.g., 24" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Contract">Contract Type</label>
+                        <select name="Contract" id="Contract" required><option value="Month-to-month">Month-to-month</option><option value="One year">One year</option><option value="Two year">Two year</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="PaperlessBilling">Paperless Billing</label>
+                        <select name="PaperlessBilling" id="PaperlessBilling" required><option value="Yes">Yes</option><option value="No">No</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="PaymentMethod">Payment Method</label>
+                        <select name="PaymentMethod" id="PaymentMethod" required><option value="Electronic check">Electronic check</option><option value="Mailed check">Mailed check</option><option value="Bank transfer (automatic)">Bank transfer (automatic)</option><option value="Credit card (automatic)">Credit card (automatic)</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="MonthlyCharges">Monthly Charges</label>
+                        <input type="number" step="0.01" name="MonthlyCharges" id="MonthlyCharges" placeholder="e.g., 75.50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="TotalCharges">Total Charges</label>
+                        <input type="number" step="0.01" name="TotalCharges" id="TotalCharges" placeholder="e.g., 1800.25" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Subscribed Services -->
+            <div class="form-step" id="step-3">
+                <h2 class="step-title">Subscribed Services</h2>
+                <div class="form-grid">
+                    <div class="form-group"><label for="PhoneService">Phone Service</label><select name="PhoneService" id="PhoneService" required><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                    <div class="form-group"><label for="MultipleLines">Multiple Lines</label><select name="MultipleLines" id="MultipleLines" required><option value="Yes">Yes</option><option value="No">No</option><option value="No phone service">No phone service</option></select></div>
+                    <div class="form-group"><label for="InternetService">Internet Service</label><select name="InternetService" id="InternetService" required><option value="DSL">DSL</option><option value="Fiber optic">Fiber optic</option><option value="No">No</option></select></div>
+                    <div class="form-group"><label for="OnlineSecurity">Online Security</label><select name="OnlineSecurity" id="OnlineSecurity" required><option value="Yes">Yes</option><option value="No">No</option><option value="No internet service">No internet service</option></select></div>
+                    <div class="form-group"><label for="OnlineBackup">Online Backup</label><select name="OnlineBackup" id="OnlineBackup" required><option value="Yes">Yes</option><option value="No">No</option><option value="No internet service">No internet service</option></select></div>
+                    <div class="form-group"><label for="DeviceProtection">Device Protection</label><select name="DeviceProtection" id="DeviceProtection" required><option value="Yes">Yes</option><option value="No">No</option><option value="No internet service">No internet service</option></select></div>
+                    <div class="form-group"><label for="TechSupport">Tech Support</label><select name="TechSupport" id="TechSupport" required><option value="Yes">Yes</option><option value="No">No</option><option value="No internet service">No internet service</option></select></div>
+                    <div class="form-group"><label for="StreamingTV">Streaming TV</label><select name="StreamingTV" id="StreamingTV" required><option value="Yes">Yes</option><option value="No">No</option><option value="No internet service">No internet service</option></select></div>
+                    <div class="form-group"><label for="StreamingMovies">Streaming Movies</label><select name="StreamingMovies" id="StreamingMovies" required><option value="Yes">Yes</option><option value="No">No</option><option value="No internet service">No internet service</option></select></div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="form-navigation">
+                <button type="button" id="back-btn">Back</button>
+                <button type="button" id="next-btn">Next</button>
+            </div>
+        </form>
+    </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('prediction-form');
+        const nextBtn = document.getElementById('next-btn');
+        const backBtn = document.getElementById('back-btn');
+        const steps = Array.from(document.querySelectorAll('.form-step'));
+        const totalSteps = steps.length;
+        let currentStep = 1;
+
+        const updateForm = () => {
+            steps.forEach(step => {
+                step.classList.remove('active-step');
+            });
+            document.getElementById(`step-${currentStep}`).classList.add('active-step');
+            
+            if (currentStep === totalSteps) {
+                nextBtn.textContent = 'Predict';
+                nextBtn.type = 'submit';
+            } else {
+                nextBtn.textContent = 'Next';
+                nextBtn.type = 'button';
+            }
+        };
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateForm();
+            }
+        });
+
+        backBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateForm();
+            }
+        });
+
+        // Initial form setup
+        updateForm();
+    });
+    
+</script>
+
+</body>
+</html>

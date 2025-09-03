@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silver AV - About Us</title>
+    
+    <!-- === ADD FONT AWESOME FOR ICONS === -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Your existing CSS links -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Your existing Gemini Inspired CSS --- */
+        :root {
+            --dark-bg: #0D1117;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --light-text: #E6EDF3;
+            --subtle-text: #8B949E;
+            --accent-blue: #3B82F6;
+            --glass-bg: rgba(22, 27, 34, 0.75);
+            --border-color: #30363d;
+        }
+        body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--dark-bg); color: var(--light-text); overflow-x: hidden; }
+        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 15% 25%, var(--primary-glow) 0%, transparent 20%), radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.4) 0%, transparent 25%); filter: blur(80px); z-index: -1; animation: moveAurora 20s infinite alternate linear; }
+        @keyframes moveAurora { from { transform: rotate(0deg) scale(1.2); } to { transform: rotate(360deg) scale(1.5); } }
+        .main-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; }
+        .logo { font-size: 24px; font-weight: 700; letter-spacing: 4px; }
+        .main-nav ul { margin: 0; padding: 0; list-style: none; display: flex; gap: 15px; }
+        .main-nav a { text-decoration: none; color: var(--subtle-text); font-size: 16px; font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.3s ease; }
+        .main-nav a:hover { color: var(--light-text); background-color: rgba(255, 255, 255, 0.1); }
+        .main-nav a.active { color: var(--light-text); background-color: var(--accent-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        .main-content { display: flex; justify-content: center; padding: 40px 5%; min-height: 70vh; }
+        .about-box { max-width: 800px; width: 100%; background-color: var(--glass-bg); backdrop-filter: blur(12px); padding: 40px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 0 50px rgba(59, 130, 246, 0.3); text-align: center; }
+        .about-box h2 { font-size: 2rem; margin-bottom: 20px; color: var(--light-text); text-shadow: 0px 0px 12px var(--primary-glow); }
+        .description { margin-top: 25px; padding: 20px; font-size: 16px; font-style: italic; line-height: 1.6; background: rgba(0, 0, 0, 0.08); border-left: 5px solid var(--accent-blue); border-radius: 8px; color: var(--light-text); text-align: left; }
+
+        /* === NEW CSS FOR TEAM & CONTACT SECTION === */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+            text-align: left;
+        }
+        .team-member-card {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        .team-member-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        .team-member-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 20px;
+            color: var(--light-text);
+        }
+        .team-member-card p {
+            margin: 0 0 20px 0;
+            color: var(--subtle-text);
+            font-size: 15px;
+        }
+        .social-links a {
+            color: var(--subtle-text);
+            font-size: 24px;
+            margin-right: 15px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .social-links a:hover {
+            color: var(--accent-blue);
+        }
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            font-size: 16px;
+            color: var(--light-text);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 0.05);
+            transition: background-color 0.3s ease;
+        }
+        .contact-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">SILVER AV</div>
+        <nav class="main-nav">
+          <ul>
+            <li><a href="{{ url_for('home') }}">Predict</a></li>
+            <li><a href="{{ url_for('explore') }}">Explore</a></li>
+            <li><a href="{{ url_for('about') }}" class="active">About</a></li>
+          </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="about-box">
+            <h2>About Project Silver AV</h2>
+            <p class="description">
+                Our project focuses on building a prediction system that helps analyze customer behavior and services. It allows users to explore insights using visual dashboards. The goal is to make data interpretation simple, interactive, and visually appealing, ultimately providing a financially-optimized decision support tool for business strategy.
+            </p>
+
+            <!-- === NEW TEAM & CONTACT SECTION === -->
+            <div class="team-grid">
+                <!-- Team Member 1: Tarun -->
+                <div class="team-member-card">
+                    <h3>Muddana Tarun</h3>
+                    <p>2420080073</p>
+                    <div class="social-links">
+                        <!-- IMPORTANT: Replace '#' with your actual links -->
+                        <a href="https://github.com/SilverShadowHeart" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/tarun-muddana-386255344/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                    <!-- IMPORTANT: Replace with your actual email -->
+                    <a href="mailto:muddanatarun2006@gmail.com" class="contact-link">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </a>
+                </div>
+
+                <!-- Team Member 2: Bhargaveepriya -->
+                <div class="team-member-card">
+                    <h3>Nuthi Bhargaveepriya</h3>
+                    <p>2420080072</p>
+                    <div class="social-links">
+                        <a href="#" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                    <a href="mailto:bhargaveepriya.email@example.com" class="contact-link">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </a>
+                </div>
+
+                <!-- Team Member 3: Babitha -->
+                <div class="team-member-card">
+                    <h3>Gandikota Babitha</h3>
+                    <p>2420080069</p>
+                    <div class="social-links">
+                        <a href="#" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                    <a href="mailto:babitha.email@example.com" class="contact-link">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

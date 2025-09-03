@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silver AV - Prediction Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Result Page Styles */
+        .result-container {
+            text-align: center;
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            padding: 50px;
+            border-radius: 16px;
+            box-shadow: 0 0 50px rgba(59, 130, 246, 0.3);
+            margin-top: 40px;
+        }
+        .result-header { margin-bottom: 40px; }
+        .result-text { font-size: 36px; font-weight: 700; margin-bottom: 15px; text-shadow: 0 0 15px currentColor; }
+        .confidence-text { font-size: 24px; color: var(--subtle-text); margin-bottom: 40px; }
+        .explanation-section { text-align: left; margin-top: 40px; border-top: 1px solid #30363d; padding-top: 30px; }
+        .explanation-section h3 { font-size: 22px; color: var(--accent-blue); margin-bottom: 20px; }
+        .explanation-list { list-style: none; padding: 0; margin-bottom: 30px; }
+        .explanation-list li { margin-bottom: 12px; font-size: 17px; border-bottom: 1px dashed #2d3642; padding-bottom: 5px; }
+        .explanation-list li strong { color: #facc15; } /* Highlight key data */
+        .suggestion-box { background-color: rgba(59, 130, 246, 0.1); border-left: 5px solid var(--accent-blue); padding: 20px; border-radius: 8px; margin-bottom: 40px;}
+        .suggestion-box p { margin: 0; font-style: italic; color: var(--light-text); font-size: 18px; }
+        .result-container .btn { background-color: var(--accent-blue); color: #fff; border: none; padding: 15px 40px; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); text-decoration: none; border-radius: 8px; }
+        .result-container .btn:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(59, 130, 246, 0.6); }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+    <div class="logo">SILVER AV</div>
+    <nav class="main-nav">
+        <ul>
+            <li><a href="{{ url_for('home') }}" class="active">Predict</a></li>
+            <li><a href="{{ url_for('explore') }}">Explore</a></li>
+            <li><a href="#">About</a></li>
+        </ul>
+    </nav>
+</header>
+
+    <main class="main-content">
+        <div class="result-container">
+            <div class="result-header">
+                <h2 class="result-text" style="color: {{ result_color }};">
+                    {{ prediction_text }}
+                </h2>
+                <p class="confidence-text">Predicted Churn Probability: {{ confidence_text }}</p>
+            </div>
+
+            <div class="suggestion-box">
+                <h3>Suggested Action</h3>
+                <p>{{ suggestion }}</p>
+            </div>
+
+            <div class="explanation-section">
+                <h3>Explanation of Risk Factors</h3>
+                <ul class="explanation-list">
+                    {% for point in explanation %}
+                        <li>{{ point|safe }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <a href="{{ url_for('home') }}" class="btn">Make Another Prediction</a>
+        </div>
+    </main>
+</body>
+</html>

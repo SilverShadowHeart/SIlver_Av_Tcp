@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silver AV - Data Explorer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Add Plotly CDN -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+<style>
+    /* Explore Page Specific Styles */
+    .explore-container { width: 100%; max-width: 1000px; background-color: var(--glass-bg); backdrop-filter: blur(12px); padding: 40px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 0 50px rgba(59, 130, 246, 0.3); }
+    .explore-controls { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; margin-bottom: 30px; border-bottom: 1px solid #30363d; padding-bottom: 20px; }
+    .explore-controls select, .explore-controls button { padding: 10px; border-radius: 6px; background-color: #0D1117; color: var(--light-text); border: 1px solid #30363d; font-family: 'Inter', sans-serif; font-size: 14px; }
+    .explore-controls button { background-color: var(--accent-blue); cursor: pointer; transition: background-color 0.2s ease; }
+    .explore-controls button:hover { background-color: #60a5fa; }
+    
+    /* --- THE FIX FOR THE CONTAINER AND GAP --- */
+    .plot-area { 
+        text-align: center; 
+        margin-bottom: 20px; 
+        background-color: rgba(22, 27, 34, 0.5); 
+        border-radius: 8px; 
+    /* Add padding to keep image from touching border */
+        border: 1px solid #30363d; 
+        transition: all 0.3s ease; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        /* REMOVED fixed heights to let the container adapt to the image size */
+    }
+    
+    /* --- THE FIX FOR THE IMAGE ITSELF --- */
+    .plot-area img {
+        display: block;
+/* Never wider than the container's content area */
+       /* Prevent plots from becoming excessively tall */
+        width: auto;       /* Maintain aspect ratio */
+        height: auto;      /* Maintain aspect ratio */
+        object-fit: contain; /* Ensure the entire image is always visible */
+    }
+    
+    #plot-caption { margin-top: 15px; font-size: 16px; font-style: italic; color: var(--subtle-text); }
+    #loading-message { font-size: 24px; color: var(--accent-blue); padding: 150px 0; } /* Add padding to center message vertically */
+</style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">SILVER AV</div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="{{ url_for('home') }}">Predict</a></li>
+                <li><a href="{{ url_for('explore') }}" class="active">Explore</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="main-content">
+        <div class="explore-container">
+            <h2 class="step-title" style="margin-top:0;">Dataset Explorer (EDA)</h2>
+            <div class="explore-controls">
+                <div class="form-group">
+                    <label for="plot_type">Plot Type</label>
+                    <select id="plot_type">
+    <option value="univariate_bar">Distribution Bar Chart</option>
+    <option value="bivariate_bar_churn">Churn Analysis Bar Chart</option>
+    <option value="box">Box Plot (Numeric Analysis)</option>
+    <option value="pie">Pie Chart (Category Distribution)</option>
+</select>
+                </div>
+                <div class="form-group">
+                    <label for="x_col">X-Axis Variable</label>
+                    <select id="x_col"></select>
+                </div>
+                <div class="form-group" id="y_select_group" style="display:none;">
+                    <label for="y_col">Y-Axis Variable</label>
+                    <select id="y_col"></select>
+                </div>
+                <div class="form-group" id="z_select_group" style="display:none;">
+                    <label for="z_col">Z-Axis Variable</label>
+                    <select id="z_col"></select>
+                </div>
+                
+                <!-- === THE BUTTON FIX: Removed onclick="" and added an ID === -->
+                <button id="generate-plot-btn">Generate Plot</button>
+            </div>
+            <div class="plot-area" id="plot-container">
+                <div id="loading-message">Select variables and plot type to begin exploration.</div>
+            </div>
+            <p id="plot-caption"></p>
+        </div>
+    <!-- ... (your HTML body and main content) ... -->
+    </main>
+
+<!-- === REPLACE YOUR ENTIRE OLD SCRIPT WITH THIS NEW ONE === -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const plotTypeSelect = document.getElementById('plot_type');
+    const xColSelect = document.getElementById('x_col');
+    const yColSelect = document.getElementById('y_col');
+    const zColSelect = document.getElementById('z_col');
+    const ySelectGroup = document.getElementById('y_select_group');
+    const zSelectGroup = document.getElementById('z_select_group');
+    const generatePlotBtn = document.getElementById('generate-plot-btn');
+    const plotContainer = document.getElementById('plot-container');
+    const plotCaption = document.getElementById('plot-caption');
+
+    const CAT_COLS = {{ categorical_cols | tojson | safe }};
+    const NUM_COLS = {{ numerical_cols | tojson | safe }};
+
+    function updateVariableOptions() {
+        const type = plotTypeSelect.value;
+        xColSelect.innerHTML = '';
+        yColSelect.innerHTML = '';
+        ySelectGroup.style.display = 'none';
+
+        let allowedCols = [];
+        if (["univariate_bar", "bivariate_bar_churn", "pie"].includes(type)) {
+            allowedCols = CAT_COLS;
+        } else if (type === "box") {
+            allowedCols = CAT_COLS;
+            ySelectGroup.style.display = 'block';
+            NUM_COLS.forEach(col => {
+                yColSelect.add(new Option(col, col));
+            });
+        }
+
+        allowedCols.forEach(col => xColSelect.add(new Option(col, col)));
+    }
+
+    async function generatePlot() {
+        const type = plotTypeSelect.value;
+        const xCol = xColSelect.value;
+        const yCol = type === "box" ? yColSelect.value : null;
+
+        plotContainer.innerHTML = '<div class="loading">Generating plot...</div>';
+        plotCaption.textContent = '';
+
+        try {
+            const url = `/generate_plot?type=${type}&x=${xCol}${yCol ? '&y=' + yCol : ''}`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (response.ok) {
+                plotContainer.innerHTML = `<img src="data:image/png;base64,${data.image_data}" alt="Data Visualization">`;
+                plotCaption.textContent = data.analysis_text;
+            } else {
+                plotContainer.innerHTML = `<div class="error">Error: ${data.error || 'Could not generate plot.'}</div>`;
+            }
+        } catch (error) {
+            plotContainer.innerHTML = `<div class="error">Network error occurred. Please try again.</div>`;
+        }
+    }
+
+    plotTypeSelect.addEventListener('change', updateVariableOptions);
+    generatePlotBtn.addEventListener('click', generatePlot);
+    
+    // Initial setup
+    updateVariableOptions();
+});
+</script>
+
+</body>
+</html>

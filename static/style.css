@@ -1,0 +1,304 @@
+/* static/style.css - The "Gemini" Inspired Redesign */
+
+/* --- 1. Global Styles & Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+:root {
+    --dark-bg: #0D1117;
+    --primary-glow: rgba(59, 130, 246, 0.5); /* A nice blue glow */
+    --light-text: #E6EDF3;
+    --subtle-text: #8B949E;
+    --accent-blue: #3B82F6;
+    --glass-bg: rgba(22, 27, 34, 0.75);
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--light-text);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* --- 2. Live Animated Background --- */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 15% 25%, var(--primary-glow) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.4) 0%, transparent 25%);
+    filter: blur(80px);
+    z-index: -1;
+    animation: moveAurora 20s infinite alternate linear;
+}
+
+@keyframes moveAurora {
+    from { transform: rotate(0deg) scale(1.2); }
+    to   { transform: rotate(360deg) scale(1.5); }
+}
+
+
+/* --- 3. Header & Navigation --- */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%; /* Use percentage for responsiveness */
+    background-color: transparent;
+    animation: slideDownFadeIn 0.8s ease-out forwards;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--light-text);
+}
+
+.main-nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 15px;
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: var(--subtle-text);
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.main-nav a:hover {
+    color: var(--light-text);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.main-nav a.active {
+    color: var(--light-text);
+    background-color: var(--accent-blue);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+}
+
+
+/* --- 4. Main Content & Form Container (with Glow) --- */
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top */
+    padding: 40px 5%;
+    min-height: 70vh;
+    animation: slideUpFadeIn 0.8s ease-out 0.2s forwards;
+    opacity: 0;
+}
+
+@keyframes slideUpFadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideDownFadeIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+#prediction-form {
+    width: 100%;
+    max-width: 800px;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 40px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 50px rgba(59, 130, 246, 0.3); /* The Glow! */
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- 5. Form Steps & Animation --- */
+.form-step {
+    display: none;
+    animation: stepFadeOut 0.4s ease-in-out forwards;
+    flex-grow: 1;
+}
+.form-step.active-step {
+    display: block;
+    animation: stepFadeIn 0.4s ease-in-out forwards;
+}
+@keyframes stepFadeIn {
+    from { opacity: 0; transform: translateX(30px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes stepFadeOut {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(-30px); }
+}
+
+.step-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 40px;
+}
+
+/* --- 6. Form Grid & Input Styling --- */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--subtle-text);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    background-color: #0D1117;
+    color: var(--light-text);
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+}
+
+.form-group select option {
+    background-color: #161B22;
+}
+
+/* --- 7. Navigation Buttons (Corrected Pure CSS Logic & Animation) --- */
+.form-navigation {
+    display: flex;
+    justify-content: space-between; /* Keeps Back on left, Next on right */
+    align-items: center;
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* 
+  THIS IS THE PURE CSS SOLUTION:
+  - By default, the back button is invisible but still takes up space.
+  - The selector then says: "If the element #step-2 OR #step-3 has the
+    class '.active-step', THEN find the .form-navigation sibling and
+    make the #back-btn inside it visible."
+  - This is entirely controlled by which step is active.
+*/
+#back-btn {
+    visibility: hidden; /* Default state: hidden but occupies space */
+}
+#step-2.active-step ~ .form-navigation #back-btn,
+#step-3.active-step ~ .form-navigation #back-btn {
+    visibility: visible; /* Becomes visible only when needed */
+}
+
+
+/* General styling for both buttons */
+#back-btn, #next-btn {
+    padding: 12px 35px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Specific styling for the 'Back' button */
+#back-btn {
+    background-color: transparent;
+    color: var(--subtle-text);
+}
+
+#back-btn:hover {
+    color: var(--light-text);
+    background-color: var(--input-bg, #1C1E2D); /* Fallback color */
+}
+
+
+/* The 'Next' button with the gradient animation you wanted */
+#next-btn {
+    color: #fff;
+    /* 1. The blue-to-purple gradient */
+    background-image: linear-gradient(to right, #3B82F6 0%, #8B5CF6 50%, #3B82F6 100%);
+    
+    /* 2. Make the background wider than the button to allow for sliding */
+    background-size: 200% auto;
+
+    /* 3. Set the initial background position */
+    background-position: 0% 0%;
+}
+
+#next-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+    
+    /* 4. Animate the background slide on hover */
+    background-position: 100% 0%;
+}
+
+/* --- 8. Responsive Design --- */
+@media (max-width: 768px) {
+    .main-header {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr; /* Stack inputs on mobile */
+    }
+
+    #prediction-form {
+        padding: 25px;
+    }
+
+    .form-navigation {
+        flex-direction: column-reverse; /* Stack buttons */
+        gap: 15px;
+    }
+}
+
+.plot-area {
+    text-align: center;
+    min-height: 550px;
+    margin-bottom: 20px;
+    background-color: rgba(22, 27, 34, 0.5);
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid #30363d;
+    transition: all 0.3s ease;
+}
+
+.plot-area img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
