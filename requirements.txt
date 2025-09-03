@@ -1,0 +1,14 @@
+# Web Framework & Server
+Flask
+gunicorn
+
+# Data Handling & Machine Learning
+pandas
+numpy
+scikit-learn
+joblib
+
+# Visualization
+matplotlib
+seaborn
+plotly
